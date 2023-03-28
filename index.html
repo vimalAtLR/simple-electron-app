@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electron app</title>
+</head>
+<script>
+    const { ipcRenderer } = require("electron");
+    function shareData() {
+        console.warn("sending data to main process");
+        ipcRenderer.send("msg", "Hello from render process");
+        ipcRenderer.on("back-msg", (event, args) => {
+            console.log(args);
+        })
+    }
+</script>
+<body style="user-select: none; -webkit-app-region: drag">
+    Hey proton
+    <br>
+    <a href="child.html" target="_blank" style="-webkit-app-region: no-drag">Go to child window</a>
+    <br>
+    <input type="range" style="-webkit-app-region: no-drag">
+    <br>
+    <br>
+    <button style="-webkit-app-region: no-drag" onclick="zoomIn()">Zoom In</button>
+    <button style="-webkit-app-region: no-drag" onclick="zoomOut()">Zoom Out</button>
+    <br>
+    <button style="-webkit-app-region: no-drag" onclick="shareData()">Send msg to main process</button>
+    <script>
+        console.warn("render process.....");
+        const {webFrame} = require("electron");
+
+        function zoomIn() {
+            console.log("zoomin ")
+            webFrame.setZoomFactor(webFrame.getZoomFactor() + 1);
+        }
+        function zoomOut() {
+            webFrame.setZoomFactor(webFrame.getZoomFactor() - 1);
+        }
+        
+    </script>
+</body>
+</html>
